@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Chat from  './chat/chat';
-
+import Board from './board/board';
 import * as ReactRethinkdb from 'react-rethinkdb';
 
 // Open a react-rethinkdb session (a WebSocket connection to the server)
@@ -19,7 +17,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Chat/>
+        <Board/>
       </div>
     );
   }
