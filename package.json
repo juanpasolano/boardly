@@ -1,0 +1,27 @@
+{
+  "name": "boardly-react-app",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.2.3"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "react": "^15.3.1",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
+    "react-dom": "^15.3.1",
+    "react-mixin": "^2.0.2",
+    "react-rethinkdb": "^0.6.0",
+    "rethinkdb-websocket-server": "^0.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "rethinkdb": "node ./server/index.js",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/react-scripts/config/eslint.js"
+  }
+}
