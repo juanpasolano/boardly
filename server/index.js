@@ -20,6 +20,9 @@ RethinkdbWebsocketServer.listen({
 	unsafelyAllowAnyQuery: true,
 });
 
+
+
+
 // Start the HTTP server on port 8015
 httpServer.listen(8015);
 console.log('Tutorial server started');

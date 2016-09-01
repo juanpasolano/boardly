@@ -29,8 +29,7 @@ class Card extends Component {
             <div className="card">
                 <div className="content">
                 <div className="header">{this.props.item.creator}</div>
-                <div className="meta">{this.props.item.date.toDateString()}</div>
-                <div className="meta">{`List id: ${this.props.item.list}`}</div>
+                <div className="meta">{(this.props.item.date) ? this.props.item.date.toDateString(): ''}</div>
                 <div className="description">
                     {this.props.item.body}
                 </div>

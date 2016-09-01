@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 
 import * as ReactRethinkdb from 'react-rethinkdb';
-var reactMixin = require('react-mixin');
+import reactMixin from 'react-mixin';
 var r = ReactRethinkdb.r;
 
-import Card from '../card/card';
 import CardList from '../card-list/card-list';
-import Form from './form.js';
 
-var _ = require('lodash'); 
+var _ = require('lodash');
 
 class Board extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       filter: {
@@ -20,65 +18,64 @@ class Board extends Component {
     }
   }
 
-  observe (props, state) {
+  observe(props, state) {
     return {
-      cards: new ReactRethinkdb.QueryRequest({
-        query: r.table('cards').filter(_.pick(this.state.filter, _.identity)),
+      lists: new ReactRethinkdb.QueryRequest({
+        query: r.table('lists').filter(_.pick(this.state.filter, _.identity)),
         changes: true,
-        initial: [],              
+        initial: [],
       }),
     };
   }
 
-  handleSubmit(refs) {
-    var {creator, body} = refs;
-    var query = r.table('cards').insert({
-        creator: creator.value, 
-        body: body.value, 
-        date: new Date()
-    });
-    body.value = '';
-    ReactRethinkdb.DefaultSession.runQuery(query);
-  }
-
-  _renderCards() {
-    if(this.data.cards) {
-        return this.data.cards.value().map( (item) => {
-            return (<Card key={item.id} item={item} />)
-        })
+  _renderCardLists(lists) {
+    if (this.data.lists) {
+      return this.data.lists.value().map(item =>
+        <CardList
+          accepts={['CARD']}
+          key={item.id}
+          list={item}
+          onDrop={(droppedItem) => this.handleDrop(droppedItem, item) }/>
+      )
     }
   }
-  _renderCardLists() {
-    var lists = [{name: 'list name', id: 1}, {name: 'other list name', id: 2}];
-    return (
-      lists.map(item => {
-        return (
-          <CardList accepts={['CARD']} key={item.id} onDrop={(droppedItem) => this.handleDrop(droppedItem, item)}/>
-        )
-      })
-    )
-  }
 
-  handleDrop(droppedItem, target) {
-    console.log(droppedItem, target)
-    var query = r.table('cards').get(droppedItem.id).update({
-        list: target.id
+  _deleteCardFromCurrentList(droppedItem) {
+    var queryDeleteCard = r.table('lists')
+    .get(droppedItem.listId)
+    .update(function (row)  {
+      return {
+        'cards': row('cards')
+          .filter( item => item('id').ne(droppedItem.id))
+      }
+    })
+    var queryDeleteCardPromise = ReactRethinkdb.DefaultSession.runQuery(queryDeleteCard);
+  }
+  _addCardToTargetList(droppedItem, target) {
+    var q1 = r.table('lists').get(target.id)('cards').filter({ id: droppedItem.id });
+    var q1q = ReactRethinkdb.DefaultSession.runQuery(q1)
+    q1q.then(function (cards) {
+      if (cards.length === 0) {
+        var query = r.table('lists').get(target.id).update({
+          cards: r.row('cards').append({ ...droppedItem, listId: target.id })
+        });
+        ReactRethinkdb.DefaultSession.runQuery(query);
+      }
     });
-    ReactRethinkdb.DefaultSession.runQuery(query);
+  }
+  handleDrop(droppedItem, target) {
+    this._deleteCardFromCurrentList(droppedItem);
+    this._addCardToTargetList(droppedItem, target);
   }
 
   render() {
     return (
       <div>
-        <button onClick={()=> (this.setState({ filter: {list:1} } ))}>Set 1</button>    
-        <Form handleSubmit={this.handleSubmit.bind(this)} />
-        {this._renderCardLists()}
-        <div className="ui cards">
-            {this._renderCards()}
-        </div>
+        <button onClick={() => (this.setState({ filter: { list: 1 } })) }>Set 1</button>
+        {this._renderCardLists() }
       </div>
     );
   }
 }
 
-export default reactMixin.onClass(Board, ReactRethinkdb.DefaultMixin );
+export default reactMixin.onClass(Board, ReactRethinkdb.DefaultMixin);
