@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import Board from './board/board';
 import * as ReactRethinkdb from 'react-rethinkdb';
+import {DragDropContext} from 'react-dnd';
+import  HTML5Backend from 'react-dnd-html5-backend';
 
 // Open a react-rethinkdb session (a WebSocket connection to the server)
 ReactRethinkdb.DefaultSession.connect({
@@ -23,4 +25,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default DragDropContext(HTML5Backend)(App);

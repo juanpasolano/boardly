@@ -1,22 +1,43 @@
 import React, { Component } from 'react';
+import { DragSource } from 'react-dnd';
+
+
+/**
+ * Implements the drag source contract.
+ */
+const cardSource = {
+  beginDrag(props) {
+    return {...props.item};
+  }
+};
+
+/**
+ * Specifies the props to inject into your component.
+ */
+function collect(connect, monitor) {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  };
+}
+
 
 class Card extends Component {
     render () {
-        console.log(this.props);
-        return (
-            <div className="ui cards">
+        const { isDragging, connectDragSource, text } = this.props;
+        return connectDragSource(
             <div className="card">
                 <div className="content">
-                <div className="header">{this.props.creator}</div>
-                <div className="meta">{this.props.date.toDateString()}</div>
+                <div className="header">{this.props.item.creator}</div>
+                <div className="meta">{this.props.item.date.toDateString()}</div>
+                <div className="meta">{`List id: ${this.props.item.list}`}</div>
                 <div className="description">
-                    {this.props.body}
+                    {this.props.item.body}
                 </div>
                 </div>
-            </div>
             </div>
         )
     }
 }
 
-export default Card;
+export default DragSource('CARD', cardSource, collect)(Card);
