@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Board from './board/board';
+import Board from './components/board/board';
 import * as ReactRethinkdb from 'react-rethinkdb';
 import {DragDropContext} from 'react-dnd';
 import  HTML5Backend from 'react-dnd-html5-backend';
