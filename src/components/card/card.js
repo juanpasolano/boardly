@@ -24,7 +24,7 @@ function collect(connect, monitor) {
 
 class Card extends Component {
     render () {
-        const { isDragging, connectDragSource, text } = this.props;
+        const { isDragging, connectDragSource } = this.props;
         return connectDragSource(
             <div className="card">
                 <div className="content">
