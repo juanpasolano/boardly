@@ -32,18 +32,6 @@ class CardList extends Component {
 
     handleSubmit(refs) {
         if(this.props.onNewCard) this.props.onNewCard(refs);
-        /*var {creator, body} = refs;
-        var query = r.table('lists').get(this.props.list.id).update({
-            cards: r.row('cards').append({
-                creator: creator.value,
-                body: body.value,
-                date: new Date(),
-                id: uuid.v4(),
-                listId: this.props.list.id
-            })
-        });
-        body.value = '';
-        ReactRethinkdb.DefaultSession.runQuery(query);*/
     }
 
     render() {
