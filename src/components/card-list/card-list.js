@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DropTarget } from 'react-dnd';
+import { DragSource } from 'react-dnd';
 
 const style = {
     width: '250px',

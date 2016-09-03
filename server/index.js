@@ -5,7 +5,7 @@ var RethinkdbWebsocketServer = require('rethinkdb-websocket-server');
 
 // Set up an HTTP route to serve files from assets/
 var app = express();
-app.use('/', express.static('assets'));
+app.use('/', express.static('build'));
 var httpServer = http.createServer(app);
 
 
@@ -15,6 +15,10 @@ RethinkdbWebsocketServer.listen({
 	dbHost: 'localhost',
 	dbPort: 28015,
 	unsafelyAllowAnyQuery: true,
+});
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
 

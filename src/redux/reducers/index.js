@@ -1,5 +1,6 @@
 
 import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux'
 import _ from 'lodash';
 
 const lists = (state = [], action) => {
@@ -28,7 +29,8 @@ const lists = (state = [], action) => {
 }
 
 const rootReducer = combineReducers({
-  lists
+  lists,
+  routing: routerReducer
 })
 
 export default rootReducer

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { connectToLists, updateList, addCardToList } from '../../redux/actions'
 import CardList from '../card-list/card-list';
+import Header from './header';
 import _ from 'lodash';
 
 
@@ -64,8 +65,8 @@ export class Board extends Component {
   }
 
   handleDrop(droppedCard, targetList) {
-    this._deleteCardFromCurrentList(droppedCard);
-    if(!_.find(targetList.cards, {id: droppedCard.id})){
+    if (droppedCard.listId !== targetList.id && !_.find(targetList.cards, { id: droppedCard.id })) {
+      this._deleteCardFromCurrentList(droppedCard);
       this.props.addCardToList(droppedCard, targetList.id);
     }
   }
@@ -73,7 +74,10 @@ export class Board extends Component {
   render() {
     return (
       <div>
-        {this._renderCardLists(this.props.lists) }
+        <Header/>
+        <div className="board" style={{padding: '2rem'}}>
+          {this._renderCardLists(this.props.lists) }
+        </div>
       </div>
     );
   }
