@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
+import './card.css'
 import { DropTarget, DragSource } from 'react-dnd';
 
 const styles = {
     card: {
-        marginBottom: '-0.3rem',
+        margin: '.3em .5em',
     },
     cardDragging : {
         border: '1px dashed',
