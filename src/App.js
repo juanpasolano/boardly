@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {DragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 import Board from './components/board/board';
+import SortableSimple from './components/sortable/index';
+console.log(Board);
 import store from './redux/store';
 
 const history = syncHistoryWithStore(browserHistory, store)
@@ -17,6 +18,7 @@ class App extends Component {
       <Provider store={store}>
         <Router history={history}>
           <Route path="/">
+            <Route path="sort" component={SortableSimple}/>
             <Route path="board" component={Board}/>
           </Route>
         </Router>
@@ -25,4 +27,4 @@ class App extends Component {
   }
 }
 
-export default DragDropContext(HTML5Backend)(App);
+export default App;

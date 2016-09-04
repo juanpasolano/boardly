@@ -1,24 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { connectToLists, updateList, addCardToList } from '../../redux/actions'
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
+import { connectToLists, updateList, addCardToList, replaceCardsTemporary } from '../../redux/actions'
 import CardList from '../card-list/card-list';
 import Header from './header';
 import _ from 'lodash';
 
-
-const mapStateToProps = (state) => {
-  return {
-    lists: state.lists
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    connectToLists,
-    updateList,
-    addCardToList
-  }
-}
 
 export class Board extends Component {
   constructor(props) {
@@ -34,16 +22,11 @@ export class Board extends Component {
     this.props.connectToLists();
   }
 
-  _onNewCard(listId, refs) {
-    let {creator, body} = refs;
-    let card = {
-      creator: creator.value,
-      body: body.value,
-      date: new Date(),
-      id: new Date().getTime(),
-      listId: listId
-    }
-    this.props.addCardToList(card, listId);
+  _onNewCard(card) {
+    this.props.addCardToList(card, card.listId);
+  }
+  _onMoveCard(cardArr){
+    this.props.replaceCardsTemporary(cardArr);
   }
 
   _renderCardLists(lists) {
@@ -54,7 +37,9 @@ export class Board extends Component {
           key={item.id}
           list={item}
           onDrop={(droppedCard) => this.handleDrop(droppedCard, item) }
-          onNewCard={this._onNewCard.bind(this, item.id) } />
+          onNewCard={this._onNewCard.bind(this)}
+          onMoveCard={this._onMoveCard.bind(this)}
+        />
       )
     }
   }
@@ -83,7 +68,26 @@ export class Board extends Component {
   }
 }
 
+
+/**
+ * Container settings
+ */
+const mapStateToProps = (state) => {
+  return {
+    lists: state.lists
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    connectToLists,
+    updateList,
+    addCardToList,
+    replaceCardsTemporary
+  }
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Board);
+)(DragDropContext(HTML5Backend)(Board));

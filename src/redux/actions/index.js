@@ -20,11 +20,25 @@ export const updateList = (list) => {
   })
 }
 
+export const replaceCardsTemporary = (cardArr) => {
+  store.dispatch({
+    type: 'REPLACE_CARDS_TEMPORARY',
+    payload: cardArr
+  })
+}
+
+export const replaceCards = (cardArr) => {
+  var query = r.table('lists').get(cardArr[0].listId).update({
+    cards: cardArr
+  });
+  ReactRethinkdb.DefaultSession.runQuery(query);
+}
+
 export const addCardToList = (card, listId) => {
   var query = r.table('lists').get(listId).update({
-    cards: r.row('cards').append({...card, listId: listId })
-});
-ReactRethinkdb.DefaultSession.runQuery(query);
+    cards: r.row('cards').append(Object.assign({}, card, { listId: listId }))
+  });
+  ReactRethinkdb.DefaultSession.runQuery(query);
 }
 
 
