@@ -11,25 +11,6 @@ const styles = {
         opacity: 0.3
     }
 }
-class Card extends Component {
-    render() {
-        const { canDrop, isOver, connectDropTarget } = this.props;
-        const { isDragging, connectDragSource } = this.props;
-        const cardStyles = Object.assign({}, styles.card, isDragging ? styles.cardDragging : {})
-        return connectDropTarget(connectDragSource(
-            <div className="card" style={cardStyles}>
-                <div className="content">
-                    <div className="header">{this.props.item.creator}</div>
-                    <div className="meta">{(this.props.item.date) ? this.props.item.date.toDateString() : ''}</div>
-                    <div className="description">
-                        {this.props.item.body}
-                    </div>
-                </div>
-            </div>
-        ))
-    }
-}
-
 /**
  * for Dragging
  */
@@ -47,16 +28,10 @@ function collect(connect, monitor) {
         isDragging: monitor.isDragging()
     };
 }
-
-
 /**
  * For dropping
  */
 const cardTarget = {
-    drop: function (props, monitor) {
-        console.log('cardTarget');
-        console.log(monitor.isOver(), monitor.isOver({shallow: false}), monitor.didDrop(), monitor.getDropResult());
-    },
     hover(props, monitor, component) {
         const dragIndex = monitor.getItem().index;
         const hoverIndex = props.index;
@@ -77,8 +52,30 @@ const cardTarget = {
     }
 };
 
-export default DragSource('CARD', cardSource, collect)(DropTarget(['CARD'], cardTarget, (connect, monitor) => ({
+@DragSource('CARD', cardSource, collect)
+@DropTarget(['CARD'], cardTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop()
-}))(Card));
+}))
+class Card extends Component {
+    render() {
+        const { connectDropTarget } = this.props;
+        const { isDragging, connectDragSource } = this.props;
+        const cardStyles = Object.assign({}, styles.card, isDragging ? styles.cardDragging : {})
+        return connectDropTarget(connectDragSource(
+            <div className="card" style={cardStyles}>
+                <div className="content">
+                    <div className="header">{this.props.item.creator}</div>
+                    <div className="meta">{(this.props.item.date) ? this.props.item.date.toDateString() : ''}</div>
+                    <div className="description">
+                        {this.props.item.body}
+                    </div>
+                </div>
+            </div>
+        ))
+    }
+}
+
+
+export default Card;

@@ -7,7 +7,25 @@ import CardList from '../card-list/card-list';
 import Header from './header';
 import _ from 'lodash';
 
+/**
+ * Container settings
+ */
+const mapStateToProps = (state) => {
+  return {
+    lists: state.lists
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    connectToLists,
+    updateList,
+    addCardToList,
+    replaceCardsTemporary
+  }
+}
 
+@connect(mapStateToProps, mapDispatchToProps)
+@DragDropContext(HTML5Backend)
 export class Board extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +63,7 @@ export class Board extends Component {
   }
   _deleteCardFromCurrentList(droppedCard) {
     let list = _.find(_.cloneDeep(this.props.lists), { id: droppedCard.listId })
-    let cards = _.remove(list.cards, card => card.id === droppedCard.id);
+    _.remove(list.cards, card => card.id === droppedCard.id); 
     this.props.updateList(list);
   }
 
@@ -69,25 +87,4 @@ export class Board extends Component {
 }
 
 
-/**
- * Container settings
- */
-const mapStateToProps = (state) => {
-  return {
-    lists: state.lists
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    connectToLists,
-    updateList,
-    addCardToList,
-    replaceCardsTemporary
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DragDropContext(HTML5Backend)(Board));
+export default Board;

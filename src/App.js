@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import {DragDropContext} from 'react-dnd';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux'
 
 import Board from './components/board/board';
 import SortableSimple from './components/sortable/index';
-console.log(Board);
 import store from './redux/store';
 
 const history = syncHistoryWithStore(browserHistory, store)

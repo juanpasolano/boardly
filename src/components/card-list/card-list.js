@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
-import _ from 'lodash';
 
 const style = {
     width: '250px',
@@ -15,13 +14,41 @@ const style = {
 
 import Card from '../card/card'
 import Form from './form.js';
-import uuid from 'node-uuid';
-
-import * as ReactRethinkdb from 'react-rethinkdb';
-var r = ReactRethinkdb.r;
 
 
+/**
+ * For dragging
+ */
+const cardSource = {
+    beginDrag(props) {
+        return {...props };
+    }
+};
+function collect(connect, monitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+}
+/**
+ * For dropping
+ */
+const cardListTarget = {
+    drop: function (props, monitor, component) {
+        component.setState({
+            lastCardDragIndex: null,
+            lastCardHoverIndex: null});
 
+        props.onDrop(monitor.getItem().item);
+    }
+};
+
+@DragSource('CARD-LIST', cardSource, collect)
+@DropTarget(['CARD'], cardListTarget, (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()   
+}))
 class CardList extends Component {
     constructor(props) {
         super(props);
@@ -51,8 +78,8 @@ class CardList extends Component {
     }
 
     moveCard(dragIndex, hoverIndex, monitor) {
-        if (dragIndex != this.state.lastCardDragIndex
-            && hoverIndex != this.state.lastCardHoverIndex) {
+        if (dragIndex !== this.state.lastCardDragIndex
+            && hoverIndex !== this.state.lastCardHoverIndex) {
 
             this.setState({ lastCardDragIndex: dragIndex, lastCardHoverIndex: hoverIndex }
                 , () => {
@@ -75,9 +102,8 @@ class CardList extends Component {
 
 
     render() {
-        const { canDrop, isOver, connectDropTarget } = this.props;
-        const { isDragging, connectDragSource } = this.props;
-        const isActive = canDrop && isOver;
+        const { connectDropTarget } = this.props;
+        const { connectDragSource } = this.props;
         return connectDragSource(connectDropTarget(
             <div style={style}>
                 <div style={{ marginBottom: '10px' }}>
@@ -97,37 +123,5 @@ class CardList extends Component {
         ))
     }
 }
-/**
- * For dragging
- */
-const cardSource = {
-    beginDrag(props) {
-        return {...props };
-    }
-};
-function collect(connect, monitor) {
-    return {
-        connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging()
-    };
-}
-/**
- * For dropping
- */
-const cardListTarget = {
-    drop: function (props, monitor, component) {
-        component.setState({
-            lastCardDragIndex: null,
-            lastCardHoverIndex: null});
 
-        console.log('cardTarget');
-        console.log(monitor.isOver(), monitor.isOver({shallow: false}), monitor.didDrop(), monitor.getDropResult());
-        props.onDrop(monitor.getItem().item);
-    }
-};
-
-export default DragSource('CARD-LIST', cardSource, collect)(DropTarget(['CARD'], cardListTarget, (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
-}))(CardList));
+export default CardList;

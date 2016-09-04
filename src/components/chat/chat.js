@@ -17,7 +17,7 @@ class Chat extends Component {
     };
   }
 
-  handleSubmit(event) {
+  handleSubmit(event) {      
     event.preventDefault();
     var nameInput = this.refs.name;
     var messageInput = this.refs.message;

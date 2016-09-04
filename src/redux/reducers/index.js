@@ -1,7 +1,6 @@
 
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux'
-import _ from 'lodash';
 
 const lists = (state = [], action) => {
   switch (action.type) {
@@ -26,7 +25,7 @@ const lists = (state = [], action) => {
     }
     case 'REPLACE_CARDS_TEMPORARY':{
         let listId = action.payload[0].listId
-        return state.map(list => (list.id == listId) ? Object.assign(list, {cards:action.payload}) : list);
+        return state.map(list => (list.id === listId) ? Object.assign(list, {cards:action.payload}) : list);
     }
 
     default:
