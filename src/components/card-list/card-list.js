@@ -14,6 +14,7 @@ const style = {
 
 import Card from '../card/card'
 import Form from './form.js';
+import EditableInput from './editable-input';
 
 
 /**
@@ -91,6 +92,10 @@ class CardList extends Component {
         }
     }
 
+    onSubmitEditTitle(refs) {
+        if(this.props.onSubmitEditTitle) this.props.onSubmitEditTitle(refs.title.value)
+    }
+
 
     _renderCards(cards) {
         if (cards && cards.length > 0) {
@@ -106,8 +111,10 @@ class CardList extends Component {
         const { connectDragSource } = this.props;
         return connectDragSource(connectDropTarget(
             <div style={style}>
-                <div style={{ marginBottom: '10px' }}>
-                    <h3 className="ui header">{this.props.list.name}</h3>
+                <div className="m-b-2">
+                    <EditableInput onSubmit={this.onSubmitEditTitle.bind(this)} value={this.props.list.name}>
+                        <h3 className="ui header">{this.props.list.name || 'Set a name...'}</h3>
+                    </EditableInput>
                 </div>
                 {
                     (this.props.list.cards && this.props.list.cards.length > 0) ?
@@ -116,7 +123,7 @@ class CardList extends Component {
                         </div>
                         : ''
                 }
-                <div>
+                <div className="m-t-3">
                     <Form handleSubmit={this.handleSubmit.bind(this) } />
                 </div>
             </div>

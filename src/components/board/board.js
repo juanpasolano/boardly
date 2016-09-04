@@ -46,6 +46,10 @@ export class Board extends Component {
   _onMoveCard(cardArr){
     this.props.replaceCardsTemporary(cardArr);
   }
+  _onSubmitEditTitle(listId, title) {
+    console.log({name: title, id:listId});
+    this.props.updateList({name: title, id:listId});
+  }
 
   _renderCardLists(lists) {
     if (lists) {
@@ -57,6 +61,7 @@ export class Board extends Component {
           onDrop={(droppedCard) => this.handleDrop(droppedCard, item) }
           onNewCard={this._onNewCard.bind(this)}
           onMoveCard={this._onMoveCard.bind(this)}
+          onSubmitEditTitle={this._onSubmitEditTitle.bind(this, item.id)}
         />
       )
     }
