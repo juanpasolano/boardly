@@ -114,16 +114,19 @@ function collect(connect, monitor) {
 /**
  * For dropping
  */
-const dustbinTarget = {
+const cardListTarget = {
     drop: function (props, monitor, component) {
         component.setState({
             lastCardDragIndex: null,
             lastCardHoverIndex: null});
+
+        console.log('cardTarget');
+        console.log(monitor.isOver(), monitor.isOver({shallow: false}), monitor.didDrop(), monitor.getDropResult());
         props.onDrop(monitor.getItem().item);
     }
 };
 
-export default DragSource('CARD-LIST', cardSource, collect)(DropTarget(['CARD'], dustbinTarget, (connect, monitor) => ({
+export default DragSource('CARD-LIST', cardSource, collect)(DropTarget(['CARD'], cardListTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop()

@@ -3,7 +3,7 @@ import ReactRethinkdb from 'react-rethinkdb';
 var r = ReactRethinkdb.r;
 
 ReactRethinkdb.DefaultSession.connect({
-  host: 'localhost',
+  host: '192.168.0.4',
   port: 8015,
   path: '/db',
   secure: false,

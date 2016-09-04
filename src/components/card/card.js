@@ -2,13 +2,22 @@ import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
 import { DropTarget, DragSource } from 'react-dnd';
 
+const styles = {
+    card: {
+        marginBottom: '-0.3rem',
+    },
+    cardDragging : {
+        border: '1px dashed',
+        opacity: 0.3
+    }
+}
 class Card extends Component {
     render() {
         const { canDrop, isOver, connectDropTarget } = this.props;
         const { isDragging, connectDragSource } = this.props;
-        const opacity = isDragging ? 0.5 : 1;
+        const cardStyles = Object.assign({}, styles.card, isDragging ? styles.cardDragging : {})
         return connectDropTarget(connectDragSource(
-            <div className="card" style={{ opacity }}>
+            <div className="card" style={cardStyles}>
                 <div className="content">
                     <div className="header">{this.props.item.creator}</div>
                     <div className="meta">{(this.props.item.date) ? this.props.item.date.toDateString() : ''}</div>
@@ -45,6 +54,7 @@ function collect(connect, monitor) {
  */
 const cardTarget = {
     drop: function (props, monitor) {
+        console.log('cardTarget');
         console.log(monitor.isOver(), monitor.isOver({shallow: false}), monitor.didDrop(), monitor.getDropResult());
     },
     hover(props, monitor, component) {
