@@ -25,7 +25,7 @@ const cardSource = {
         };
     },
     isDragging(props, monitor) {
-        console.log('is Dragging');
+        return props.item.id === monitor.getItem().item.id
     }
 };
 function collect(connect, monitor) {
@@ -40,6 +40,9 @@ function collect(connect, monitor) {
 const cardTarget = {
     hover(props, monitor, component) {
         props.moveCard(props, monitor, component);
+    },
+    drop(props, monitor, component) {
+        console.log(props, monitor, component);
     }
 };
 /**

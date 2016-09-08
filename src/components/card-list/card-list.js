@@ -49,7 +49,7 @@ const cardListTarget = {
 };
 
 @DragSource('CARD-LIST', cardSource, collect)
-@DropTarget(['CARD'], cardListTarget, (connect, monitor) => ({
+@DropTarget(['CARD-LIST'], cardListTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop(),
