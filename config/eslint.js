@@ -180,6 +180,7 @@ module.exports = {
     'react/no-is-mounted': 'warn',
     'react/react-in-jsx-scope': 'warn',
     'react/require-render-return': 'warn',
+    'react/prop-types': 'warn',
 
     // https://github.com/evcohen/eslint-plugin-jsx-a11y/tree/master/docs/rules
     'jsx-a11y/aria-role': 'warn',

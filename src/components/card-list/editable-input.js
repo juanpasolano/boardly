@@ -1,5 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
+const propTypes = {
+    onSubmit: PropTypes.func,
+    value: PropTypes.string,
+    children: PropTypes.element.isRequired,
+}
+const defaultProps = {
+  value: '',
+};
 
 const styles = {
     hidden: {
@@ -41,5 +49,7 @@ class EditableInput extends Component {
         );
     }
 }
+EditableInput.propTypes = propTypes;
+EditableInput.defaultProps = defaultProps;
 
 export default EditableInput;

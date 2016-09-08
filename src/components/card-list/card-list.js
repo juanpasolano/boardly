@@ -1,10 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
 
 import Card from '../card/card'
 import Form from './form.js';
 import EditableInput from './editable-input';
 
+const propTypes = {
+    list: PropTypes.object.isRequired,
+    onNewCard: PropTypes.func,
+    onSubmitEditTitle: PropTypes.func,
+    connectDropTarget: PropTypes.func,
+    connectDragSource: PropTypes.func,
+}
 
 const styles = {
     list: {
@@ -43,7 +50,7 @@ const cardListTarget = {
                 lastCardDragIndex: null,
                 lastCardHoverIndex: null});
 
-            props.onDrop(monitor.getItem().item);
+            props.onDrop(monitor.getItem().item); 
         }
     }
 };
@@ -53,7 +60,6 @@ const cardListTarget = {
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop(),
-    isOverCurrent: monitor.isOver({ shallow: true })
 }))
 class CardList extends Component {
     constructor(props) {
@@ -92,8 +98,7 @@ class CardList extends Component {
 
 
     render() {
-        const { connectDropTarget, isOverCurrent } = this.props;
-        const { connectDragSource } = this.props;
+        const { connectDropTarget, connectDragSource } = this.props;
         return connectDragSource(connectDropTarget(
             <div style={styles.list}>
                 <div className="m-b-2">
@@ -115,5 +120,6 @@ class CardList extends Component {
         ))
     }
 }
+CardList.propTypes = propTypes;
 
 export default CardList;

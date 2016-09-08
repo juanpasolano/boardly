@@ -1,6 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
-export default class Form extends Component {
+const propTypes = {
+    handleSubmit: PropTypes.func
+}
+
+class Form extends Component {
     _onHandleSubmit(event){
         event.preventDefault();
         if(this.props.handleSubmit) {
@@ -27,3 +31,6 @@ export default class Form extends Component {
         )
     }
 }
+Form.propTypes = propTypes;
+
+export default Form;

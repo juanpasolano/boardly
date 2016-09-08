@@ -1,9 +1,7 @@
 import store from '../store';
-import _ from 'lodash';
 import ReactRethinkdb from 'react-rethinkdb';
 import { findDOMNode } from 'react-dom';
-import Immutable, {List, Map} from 'immutable';
-window.Immutable = Immutable;
+import {List} from 'immutable';
 var r = ReactRethinkdb.r;
 
 ReactRethinkdb.DefaultSession.connect({
@@ -55,7 +53,7 @@ export const moveCard = (props, monitor, component) => {
     return;
   }
   const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-  const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+  const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2; 
   const clientOffset = monitor.getClientOffset();
   const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
@@ -66,7 +64,7 @@ export const moveCard = (props, monitor, component) => {
     return;
   }
   const lists = List(state.lists);
-  if (dragListId == hoverListId) {
+  if (dragListId === hoverListId) {
     const list = lists.find((list, index) => (list.id === hoverListId));
     const cards = List(list.cards);
     const step1 = cards.update(dragIndex, () => cards.get(hoverIndex));

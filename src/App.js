@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 
 import Board from './components/board/board';
-import SortableSimple from './components/sortable/index';
+import Login from './components/login/login';
 import store from './redux/store';
 
 const history = syncHistoryWithStore(browserHistory, store)
@@ -16,8 +16,8 @@ class App extends Component {
       <Provider store={store}>
         <Router history={history}>
           <Route path="/">
-            <Route path="sort" component={SortableSimple}/>
-            <Route path="board" component={Board}/>
+            <IndexRoute component={Login} />
+            <Route path="/board" component={Board}/>
           </Route>
         </Router>
       </Provider>

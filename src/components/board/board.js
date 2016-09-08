@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux'
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
-import { connectToLists, updateList, addCardToList, replaceCardsTemporary } from '../../redux/actions'
+import { connectToLists, updateList, addCardToList } from '../../redux/actions'
 import CardList from '../card-list/card-list';
 import Header from './header';
 import _ from 'lodash';
+
+const propTypes = {
+    lists: PropTypes.array,
+    connectToLists: PropTypes.func,
+    updateList: PropTypes.func,
+    addCardToList: PropTypes.func,
+}
 
 /**
  * Container settings
@@ -19,8 +26,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     connectToLists,
     updateList,
-    addCardToList,
-    replaceCardsTemporary
+    addCardToList
   }
 }
 
@@ -86,5 +92,6 @@ export class Board extends Component {
   }
 }
 
+Board.propTypes = propTypes;
 
 export default Board;

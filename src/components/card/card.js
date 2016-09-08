@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
-import {findDOMNode} from 'react-dom';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { moveCard } from '../../redux/actions'
-import './card.css'
+import { moveCard } from '../../redux/actions';
 import { DropTarget, DragSource } from 'react-dnd';
+
+const propTypes = {
+    connectDropTarget: PropTypes.func,
+    connectDragSource: PropTypes.func,
+    isDragging: PropTypes.bool,
+    item: PropTypes.object.isRequired
+};
 
 const styles = {
     card: {
@@ -26,7 +31,7 @@ const cardSource = {
     },
     isDragging(props, monitor) {
         return props.item.id === monitor.getItem().item.id
-    }
+    } 
 };
 function collect(connect, monitor) {
     return {
@@ -79,6 +84,8 @@ class Card extends Component {
         ))
     }
 }
+
+Card.propTypes = propTypes;
 
 
 export default Card;
