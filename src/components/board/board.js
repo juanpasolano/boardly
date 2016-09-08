@@ -43,28 +43,8 @@ export class Board extends Component {
   _onNewCard(card) {
     this.props.addCardToList(card, card.listId);
   }
-  _onMoveCard(cardArr){
-    this.props.replaceCardsTemporary(cardArr);
-  }
   _onSubmitEditTitle(listId, title) {
-    console.log({name: title, id:listId});
     this.props.updateList({name: title, id:listId});
-  }
-
-  _renderCardLists(lists) {
-    if (lists) {
-      return lists.map(item =>
-        <CardList
-          accepts={['CARD']}
-          key={item.id}
-          list={item}
-          onDrop={(droppedCard) => this.handleDrop(droppedCard, item) }
-          onNewCard={this._onNewCard.bind(this)}
-          onMoveCard={this._onMoveCard.bind(this)}
-          onSubmitEditTitle={this._onSubmitEditTitle.bind(this, item.id)}
-        />
-      )
-    }
   }
   _deleteCardFromCurrentList(droppedCard) {
     let list = _.find(_.cloneDeep(this.props.lists), { id: droppedCard.listId })
@@ -76,6 +56,21 @@ export class Board extends Component {
     if (droppedCard.listId !== targetList.id && !_.find(targetList.cards, { id: droppedCard.id })) {
       this._deleteCardFromCurrentList(droppedCard);
       this.props.addCardToList(droppedCard, targetList.id);
+    }
+  }
+
+  _renderCardLists(lists) {
+    if (lists) {
+      return lists.map(item =>
+        <CardList
+          accepts={['CARD']}
+          key={item.id}
+          list={item}
+          onDrop={(droppedCard) => this.handleDrop(droppedCard, item) }
+          onNewCard={this._onNewCard.bind(this)}
+          onSubmitEditTitle={this._onSubmitEditTitle.bind(this, item.id)}
+        />
+      )
     }
   }
 

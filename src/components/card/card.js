@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import {findDOMNode} from 'react-dom';
+import { connect } from 'react-redux';
+import { moveCard } from '../../redux/actions'
 import './card.css'
 import { DropTarget, DragSource } from 'react-dnd';
 
@@ -7,7 +9,7 @@ const styles = {
     card: {
         margin: '.3em .5em',
     },
-    cardDragging : {
+    cardDragging: {
         border: '1px dashed',
         opacity: 0.3
     }
@@ -19,8 +21,11 @@ const cardSource = {
     beginDrag(props) {
         return {
             item: props.item,
-            index: props.index    
+            index: props.index
         };
+    },
+    isDragging(props, monitor) {
+        console.log('is Dragging');
     }
 };
 function collect(connect, monitor) {
@@ -34,25 +39,19 @@ function collect(connect, monitor) {
  */
 const cardTarget = {
     hover(props, monitor, component) {
-        const dragIndex = monitor.getItem().index;
-        const hoverIndex = props.index;
-        if (dragIndex === hoverIndex) {
-            return;
-        }
-        const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-        const clientOffset = monitor.getClientOffset();
-        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-            return;
-        }
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-            return;
-        }
-        props.moveCard(dragIndex, hoverIndex, monitor);
+        props.moveCard(props, monitor, component);
     }
 };
+/**
+ * Container settings
+ */
+const mapDispatchToProps = (dispatch) => {
+    return {
+        moveCard
+    }
+}
 
+@connect(() => { return {} }, mapDispatchToProps)
 @DragSource('CARD', cardSource, collect)
 @DropTarget(['CARD'], cardTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),

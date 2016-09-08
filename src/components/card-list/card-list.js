@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
 import { DropTarget, DragSource } from 'react-dnd';
 
-const style = {
-    width: '250px',
-    marginRight: '1.5rem',
-    marginBottom: '1.5rem',
-    padding: '1rem',
-    fontSize: '1rem',
-    lineHeight: 'normal',
-    float: 'left',
-    background: '#fafafa',
-};
-
 import Card from '../card/card'
 import Form from './form.js';
 import EditableInput from './editable-input';
 
+
+const styles = {
+    list: {
+        width: '250px',
+        marginRight: '1.5rem',
+        marginBottom: '1.5rem',
+        padding: '1rem',
+        fontSize: '1rem',
+        lineHeight: 'normal',
+        float: 'left',
+        background: '#fafafa',
+    }
+};
 
 /**
  * For dragging
@@ -36,11 +38,13 @@ function collect(connect, monitor) {
  */
 const cardListTarget = {
     drop: function (props, monitor, component) {
-        component.setState({
-            lastCardDragIndex: null,
-            lastCardHoverIndex: null});
+        if(props.isOverCurrent){
+            component.setState({
+                lastCardDragIndex: null,
+                lastCardHoverIndex: null});
 
-        props.onDrop(monitor.getItem().item);
+            props.onDrop(monitor.getItem().item);
+        }
     }
 };
 
@@ -48,7 +52,8 @@ const cardListTarget = {
 @DropTarget(['CARD'], cardListTarget, (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
     isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()   
+    canDrop: monitor.canDrop(),
+    isOverCurrent: monitor.isOver({ shallow: true })
 }))
 class CardList extends Component {
     constructor(props) {
@@ -71,27 +76,6 @@ class CardList extends Component {
         if (this.props.onNewCard) this.props.onNewCard(card);
     }
 
-    swapIndices(array, index1, index2) {
-        const newArray = array.slice();
-        newArray[index1] = array[index2];
-        newArray[index2] = array[index1];
-        return newArray;
-    }
-
-    moveCard(dragIndex, hoverIndex, monitor) {
-        if (dragIndex !== this.state.lastCardDragIndex
-            && hoverIndex !== this.state.lastCardHoverIndex) {
-
-            this.setState({ lastCardDragIndex: dragIndex, lastCardHoverIndex: hoverIndex }
-                , () => {
-                    const { cards } = this.props.list;
-                    const newArray = this.swapIndices(cards, dragIndex, hoverIndex);
-                    if (this.props.onMoveCard) this.props.onMoveCard(newArray);
-                    monitor.getItem().index = hoverIndex;
-                })
-        }
-    }
-
     onSubmitEditTitle(refs) {
         if(this.props.onSubmitEditTitle) this.props.onSubmitEditTitle(refs.title.value)
     }
@@ -99,18 +83,19 @@ class CardList extends Component {
 
     _renderCards(cards) {
         if (cards && cards.length > 0) {
-            return cards.map((item, index) =>
-                <Card key={item.id} item={item} index={index} moveCard={this.moveCard.bind(this) } />
+            return cards.map((item, index) =>{
+                return <Card key={item.id} item={item} index={index} />
+                }
             )
         }
     }
 
 
     render() {
-        const { connectDropTarget } = this.props;
+        const { connectDropTarget, isOverCurrent } = this.props;
         const { connectDragSource } = this.props;
         return connectDragSource(connectDropTarget(
-            <div style={style}>
+            <div style={styles.list}>
                 <div className="m-b-2">
                     <EditableInput onSubmit={this.onSubmitEditTitle.bind(this)} value={this.props.list.name}>
                         <h3 className="ui header">{this.props.list.name || 'Set a name...'}</h3>

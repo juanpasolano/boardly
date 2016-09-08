@@ -23,8 +23,8 @@ const lists = (state = [], action) => {
         return state.map(list => (list.id === new_val.id) ? new_val : list)
       }
     }
-    case 'REPLACE_CARDS_TEMPORARY':{
-        let listId = action.payload[0].listId
+    case 'REPLACE_CARDS_TEMPORARY': {
+        let listId = action.payload[0].listId;
         return state.map(list => (list.id === listId) ? Object.assign(list, {cards:action.payload}) : list);
     }
 
